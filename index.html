@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFinder - Find Your Dream Job</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <h1>Jobfindert virson1.0</h1>
+                </div>
+                <div class="nav-buttons">
+                    <button onclick="showSection('jobs')" class="nav-btn primary">
+                        Browse Jobs
+                    </button>
+                    <button onclick="showLoginModal()" class="nav-btn success">
+                        Admin Login
+                    </button>
+                    <div id="user-info" class="user-info hidden">
+                        <span id="welcome-text"></span>
+                        <button onclick="logout()" class="nav-btn danger">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content slide-up">
+            <div class="modal-header">
+                <h3>Admin Login</h3>
+                <p>Enter your credentials to access admin panel</p>
+            </div>
+            
+            <form id="login-form" class="form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required class="form-input">
+                </div>
+                <button type="submit" class="btn primary full-width">
+                    Login
+                </button>
+                <button type="button" onclick="closeLoginModal()" class="btn secondary full-width">
+                    Cancel
+                </button>
+            </form>
+            
+            <div class="demo-credentials">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Admin: admin / admin123</p>
+                <p>Owner: owner / owner123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jobs Section -->
+    <div id="jobs-section" class="section">
+        <div class="container">
+            <div class="hero">
+                <h2>Find Your Dream Job</h2>
+                <p>Discover amazing opportunities from top companies</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-form">
+                    <input type="text" id="job-search" placeholder="Search jobs..." class="search-input">
+                    <select id="location-filter" class="search-select">
+                        <option value="">All Locations</option>
+                    </select>
+                    <button onclick="searchJobs()" class="btn primary">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job Listings -->
+            <div id="job-listings" class="job-grid">
+                <!-- Jobs will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-section" class="section hidden">
+        <div class="container">
+            <!-- Admin Navigation -->
+            <div class="admin-nav">
+                <div class="admin-nav-buttons">
+                    <button onclick="showAdminTab('add-job')" class="admin-tab-btn success">
+                        Add Job
+                    </button>
+                    <button onclick="showAdminTab('manage-jobs')" class="admin-tab-btn primary">
+                        Manage Jobs
+                    </button>
+                    <div id="owner-controls" class="owner-controls hidden">
+                        <button onclick="showAdminTab('manage-admins')" class="admin-tab-btn purple">
+                            Manage Admins
+                        </button>
+                        <button onclick="showAdminTab('job-stats')" class="admin-tab-btn orange">
+                            Job Statistics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Job Tab -->
+            <div id="add-job-tab" class="admin-tab">
+                <h2>Add New Job</h2>
+                
+                <form id="job-form" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" id="job-title" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="company-name" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="job-location" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Salary Range</label>
+                            <input type="text" id="salary-range" placeholder="e.g., ₹5-8 LPA" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Job Description</label>
+                        <textarea id="job-description" rows="4" required class="form-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Requirements</label>
+                        <textarea id="job-requirements" rows="3" required class="form-textarea"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn success full-width">
+                        Post Job
+                    </button>
+                </form>
+            </div>
+
+            <!-- Manage Jobs Tab -->
+            <div id="manage-jobs-tab" class="admin-tab hidden">
+                <h2>Manage Jobs</h2>
+                <div id="admin-job-list" class="job-management-list">
+                    <!-- Job management list will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Manage Admins Tab (Owner Only) -->
+            <div id="manage-admins-tab" class="admin-tab hidden">
+                <h2>Manage Admins</h2>
+                
+                <!-- Add New Admin -->
+                <div class="add-admin-section">
+                    <h3>Add New Admin</h3>
+                    <form id="add-admin-form" class="add-admin-form">
+                        <input type="text" id="new-admin-username" placeholder="Username" required class="form-input">
+                        <input type="password" id="new-admin-password" placeholder="Password" required class="form-input">
+                        <button type="submit" class="btn purple">
+                            Add Admin
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Admin List -->
+                <div id="admin-list" class="admin-list">
+                    <!-- Admin list will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Job Statistics Tab (Owner Only) -->
+            <div id="job-stats-tab" class="admin-tab hidden">
+                <h2>Job Statistics</h2>
+                <div id="job-statistics" class="stats-grid">
+                    <!-- Statistics will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Job Modal -->
+    <div id="edit-job-modal" class="modal hidden">
+        <div class="modal-content-large slide-up">
+            <div class="modal-header">
+                <h3>Edit Job</h3>
+                <button onclick="closeEditModal()" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="edit-job-form" class="form">
+                    <input type="hidden" id="edit-job-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" id="edit-job-title" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="edit-company-name" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="edit-job-location" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Salary Range</label>
+                            <input type="text" id="edit-salary-range" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Job Description</label>
+                        <textarea id="edit-job-description" rows="4" required class="form-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Requirements</label>
+                        <textarea id="edit-job-requirements" rows="3" required class="form-textarea"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn primary full-width">
+                        Update Job
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="application-modal" class="modal hidden">
+        <div class="modal-content-large slide-up">
+            <div class="modal-header">
+                <h3>Apply for Job</h3>
+                <button onclick="closeModal()" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="job-details" class="job-details">
+                    <!-- Job details will be shown here -->
+                </div>
+                
+                <form id="application-form" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="applicant-name" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="applicant-mobile" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="applicant-email" required class="form-input">
+                    </div>
+                    
+                    <div class="upload-section">
+                        <h4>Upload Documents</h4>
+                        <div class="demo-notice">
+                            <p>
+                                <strong>Demo Notice:</strong> File uploads and WhatsApp/Email notifications require backend services. 
+                                This demo shows the interface only.
+                            </p>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Aadhaar Card</label>
+                                <input type="file" id="aadhaar-file" accept=".pdf,.jpg,.jpeg,.png" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>PAN Card</label>
+                                <input type="file" id="pan-file" accept=".pdf,.jpg,.jpeg,.png" class="form-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Marksheet</label>
+                                <input type="file" id="marksheet-file" accept=".pdf,.jpg,.jpeg,.png" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Resume</label>
+                                <input type="file" id="resume-file" accept=".pdf,.doc,.docx" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cover Letter (Optional)</label>
+                        <textarea id="cover-letter" rows="4" placeholder="Tell us why you're perfect for this role..." class="form-textarea"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn primary full-width">
+                        Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content slide-up">
+            <div class="success-content">
+                <div class="success-icon">✓</div>
+                <h3>Application Submitted!</h3>
+                <p>Your application has been submitted successfully. The HR team will contact you soon.</p>
+                <div class="demo-notice">
+                    <p>
+                        <strong>Demo:</strong> In a real system, your documents would be sent to HR via WhatsApp and email with your contact details.
+                    </p>
+                </div>
+                <button onclick="closeSuccessModal()" class="btn primary">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    </body>
+     <script src="script.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95d03ca474a547c7',t:'MTc1MjE1MjM1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</html>
